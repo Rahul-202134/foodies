@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Form</title>
+    <link rel="stylesheet" href="style1.css">
+</head>
+<style>
+ 
+
+h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+select, input[type="number"] {
+    padding: 8px;
+    margin-right: 10px;
+    width: 150px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 8px 16px;
+    background-color: #ff3838;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #ff0000;
+}
+
+#order-summary {
+    margin-top: 20px;
+}
+
+#order-summary h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+#order-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#order-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+#total-price {
+    font-weight: bold;
+}
+
+</style>
+<body>
+
+    <h1>Please Order Something</h1>
+    <form id="order-form">
+        <label for="item">Select an item:</label>
+        <select id="item">
+            <option value="item1">Tasty Burger - RS.10</option>
+            <option value="item2">Tasty Cakes - Rs.220</option>
+            <option value="item3">Tasty Sweets - RS.20</option>
+            <option value="item4">Tasty cupcakes - Rs.25</option>
+            <option value="item5">Coldrink - RS.30</option>
+            <option value="item6">Cold Ice Cream - Rs.35</option>
+            <!-- <option value="item7">Item 7 - $40</option>
+            <option value="item8">Item 8 - $45</option>
+            <option value="item9">Item 9 - $50</option> -->
+        </select>
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" min="1" value="1">
+        <button type="button" id="add-item">Add to Order</button>
+        <button type="button" id="send-total">Send Total</button>
+
+        <div id="order-summary">
+            <h2>Order Summary</h2>
+            <ul id="order-list">
+                <!-- Orders will be listed here -->
+            </ul>
+            <p>Total: Rs.<span id="total-price">0</span></p>
+        </div>
+    </form>
+    <script>
+        
+        document.addEventListener("DOMContentLoaded", function() {
+        // Initialize variables
+        const itemSelect = document.getElementById("item");
+        const quantityInput = document.getElementById("quantity");
+        const addButton = document.getElementById("add-item");
+        const sendTotalButton = document.getElementById("send-total");
+        const orderList = document.getElementById("order-list");
+        const totalPriceSpan = document.getElementById("total-price");
+        let total = 0;
+
+        // Add event listener to the "Send Total" button
+        sendTotalButton.addEventListener("click", function() {
+            // Get the total value
+            const totalValue = total;
+
+            // Make an HTTP POST request to the PHP script
+            fetch('your_php_script.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `total=${totalValue}`,
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data); // This will display the response from the PHP script
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+
+  // Add event listener to the "Add to Order" button
+  addButton.addEventListener("click", function() {
+    const selectedItem = itemSelect.value;
+    const selectedQuantity = parseInt(quantityInput.value, 10);
+    const itemPrice = getItemPrice(selectedItem);
+
+    if (!isNaN(selectedQuantity) && selectedQuantity > 0) {
+      const orderItem = document.createElement("li");
+      const removeButton = document.createElement("button");
+      orderItem.textContent = `${selectedItem} x ${selectedQuantity}`;
+      removeButton.textContent = "Remove";
+      orderItem.appendChild(removeButton);
+      orderList.appendChild(orderItem);
+
+      total += itemPrice * selectedQuantity;
+      totalPriceSpan.textContent = total;
+
+      // Add event listener to remove button
+      removeButton.addEventListener("click", function() {
+        total -= itemPrice * selectedQuantity;
+        totalPriceSpan.textContent = total;
+        orderList.removeChild(orderItem);
+      });
+    }
+  });
+
+  // Function to get the price of the selected item
+  function getItemPrice(item) {
+    switch (item) {
+      case "item1":
+        return 10;
+      case "item2":
+        return 15;
+      case "item3":
+        return 20;
+      case "item4":
+        return 25;
+      case "item5":
+        return 30;
+      case "item6":
+        return 35;
+      case "item7":
+        return 40;
+      case "item8":
+        return 45;
+      case "item9":
+        return 50;
+      default:
+        return 0;
+    }
+  }
+});
+
+    </script>
+</body>
+</html>

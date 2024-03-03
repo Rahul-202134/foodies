@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrderForm</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="style1.css">
+</head>
+<body>
+    <h1>YOUR ORDER MAKES US HAPPY !!</h1>
+    <form id="orderForm" >
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="location">Location:</label>
+        <select id="location" name="location" required>
+            <option value="location1">MATHURA</option>
+            <option value="location2">AGRA</option>
+            <option value="location3">DELHI</option>
+        </select><br><br>
+
+        <label for="item">Select Item:</label>
+        <select id="item" name="item" required>
+            <option value="item1">Burger   - Rs100</option>
+            <option value="item2">Sandwich - Rs150</option>
+            <option value="item3">VegRoll  - Rs120</option>
+            <option value="item4">Cupcake  - Rs110</option>
+            <option value="item5">Barfi    -   Rs115</option>
+            <option value="item6">Mangore  - Rs220</option>
+            <option value="item7">Breadcake - Rs130</option>
+            <option value="item8">Chocalate -  Rs175</option>
+            <option value="item9">Cutlate - Rs210</option>
+        </select><br><br>
+
+        <button type="button" onclick="addToCart()">Add to Cart</button>
+    
+
+    <div id="cart">
+        <h2>Cart</h2>
+        <ul id="cartItems"></ul>
+        <!-- Cart items will be displayed here -->
+    </div>
+
+    <h2>Total Price: Rs.<span id="totalPrice">0</span></h2>
+    
+    
+
+    <button type="submit" onclick="submitOrder()">Submit Order</button>
+    </form>
+        <section class="footer">
+            <div class="share">
+                <a href="https://www.facebook.com/" class="btn">facebook</a>
+                <a href="https://twitter.com/" class="btn">twitter</a>
+                <a href="https://www.instagram.com/accounts/login/" class="btn">instagram</a>
+                <a href="https://in.pinterest.com/" class="btn">pinterest</a>
+                <a href="https://www.linkedin.com/login" class="btn">linkedin</a>
+            </div>
+            <h1 class="credit"> created by <span> foodie Team </span> | all rights reserved ! </h1>
+        </section>
+
+    <script>
+        var cart = [];
+        var totalPrice = 0;
+
+        function addToCart() {
+            var itemSelect = document.getElementById("item");
+            var selectedItem = itemSelect.options[itemSelect.selectedIndex].text;
+            var itemPrice = parseFloat(selectedItem.split("Rs")[1]);
+            
+            cart.push({ item: selectedItem, price: itemPrice });
+            
+            var cartItems = document.getElementById("cartItems");
+            var li = document.createElement("li");
+            li.appendChild(document.createTextNode(selectedItem));
+            cartItems.appendChild(li);
+            
+            totalPrice += itemPrice;
+            document.getElementById("totalPrice").textContent = totalPrice.toFixed(2);
+        }
+
+        function submitOrder() {
+            var name = document.getElementById("name").value;
+            var email = document.getElementById("email").value;
+            var location = document.getElementById("location").value;
+            
+            // You can now submit the order details, including the cart and total price, to your server.
+            // You may use AJAX or another method to send this data to the server.
+            
+            // For now, let's just display the order details in the console.
+            console.log("Name: " + name);
+            console.log("Email: " + email);
+            console.log("Location: " + location);
+            console.log("Cart: ");
+            console.log(cart);
+            console.log("Total Price: Rs." + totalPrice.toFixed(2));
+        }
+    </script>
+</body>
+</html>
